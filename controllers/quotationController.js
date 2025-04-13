@@ -11,17 +11,20 @@ export const quotationController = async (req, res) => {
       phone,
       email,
       notesGeneral,
-      description,
-      qty,
-      priceUnit,
-      total,
-      notes,
+      quotations,
     } = req.body;
 
-    if (!description || qty == null || priceUnit == null || total == null) {
-      return res.status(400).json({ error: "Hay campos obligatorios" });
+    if (!name || !address || !rut || !attention || !phone || !email) {
+      return res
+        .status(400)
+        .json({ error: "Hay campos obligatorios faltantes" });
     }
 
+    // Extraemos los campos dentro de getCustomerData
+    // const { name, address, rut, attention, phone, email, notesGeneral } =
+    //   getCustomerData;
+
+    // Construimos el objeto con toda la información
     const data = {
       name: name || null,
       address: address || null,
@@ -30,15 +33,11 @@ export const quotationController = async (req, res) => {
       phone: phone || null,
       email: email || null,
       notesGeneral: notesGeneral || null,
-      description: description,
-      qty: qty,
-      priceUnit: priceUnit,
-      total: total,
-      notes: notes || null,
     };
 
-    const [result] = await pool.query(
-      "INSERT INTO quotation (name, address, rut, attention, phone, email, notesGeneral, description, qty, priceUnit, total, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    // Consulta SQL para guardar la cotización y los datos del cliente
+    const [quotationResult] = await pool.query(
+      "INSERT INTO quotation (name, address, rut, attention, phone, email, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         data.name,
         data.address,
@@ -47,16 +46,28 @@ export const quotationController = async (req, res) => {
         data.phone,
         data.email,
         data.notesGeneral,
-        data.description,
-        data.qty,
-        data.priceUnit,
-        data.total,
-        data.notes,
       ]
     );
 
+    const quotationId = quotationResult.insertId;
+
+    // Insertar en la tabla quotationPrice
+    for (const item of quotations) {
+      await pool.query(
+        "INSERT INTO quotationprice (idPrice, description, qty, priceUnit, total, notes) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          quotationId,
+          item.description,
+          item.qty,
+          item.priceUnit,
+          item.total,
+          item.notes,
+        ]
+      );
+    }
+
     res.status(201).json({
-      id: result.insertId,
+      id: quotationResult.insertId,
       ...data,
     });
   } catch (error) {

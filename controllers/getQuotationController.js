@@ -15,12 +15,20 @@ export const getQuotation = async (req, res) => {
     const [total] = await pool.query("SELECT COUNT(*) AS count FROM quotation");
     const totalItems = total[0].count;
 
+    /////////////////////////////////////////////////////
+    // Obtener el último id en la tabla quotation
+    const [lastQuotation] = await pool.query(
+      "SELECT id FROM quotation ORDER BY id DESC LIMIT 1"
+    );
+    const lastId = lastQuotation.length > 0 ? lastQuotation[0].id : null;
+
     //  **Asegurar que se devuelve un objeto con la clave `quotation`**
     res.json({
-      quotation: quotation, // 👈 Ahora está dentro de un objeto
+      quotation: quotation, // Ahora está dentro de un objeto
       totalItems,
       currentPage: page,
       totalPages: Math.ceil(totalItems / limit),
+      lastId,
     });
   } catch (error) {
     console.error("Error al obtener las cotizaciones:", error);
