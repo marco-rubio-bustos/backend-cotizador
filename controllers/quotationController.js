@@ -10,6 +10,9 @@ export const quotationController = async (req, res) => {
       attention,
       phone,
       email,
+      subTotal,
+      iva,
+      total,
       notesGeneral,
       quotations,
     } = req.body;
@@ -32,12 +35,15 @@ export const quotationController = async (req, res) => {
       attention: attention || null,
       phone: phone || null,
       email: email || null,
+      subTotal: subTotal || null,
+      iva: iva || null,
+      total: total || null,
       notesGeneral: notesGeneral || null,
     };
 
     // Consulta SQL para guardar la cotización y los datos del cliente
     const [quotationResult] = await pool.query(
-      "INSERT INTO quotation (name, address, rut, attention, phone, email, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO quotation (name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         data.name,
         data.address,
@@ -45,6 +51,9 @@ export const quotationController = async (req, res) => {
         data.attention,
         data.phone,
         data.email,
+        data.subTotal,
+        data.iva,
+        data.total,
         data.notesGeneral,
       ]
     );
@@ -96,3 +105,11 @@ export const quotationController = async (req, res) => {
 // ALTER TABLE quotation
 // ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY,
 // ADD COLUMN description VARCHAR(255),
+
+// ALTER TABLE nombre_de_la_tabla CHANGE nombre_antiguo nombre_nuevo varchar(225);
+
+// ALTER TABLE quotation MODIFY COLUMN subTotal varchar(225) AFTER email;
+
+// name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral
+
+// ALTER TABLE clientes DROP COLUMN telefono;

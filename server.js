@@ -4,6 +4,7 @@ import customersRoutes from "./routes/customersRoutes.js";
 import quotationRoutes from "./routes/quotationRoutes.js";
 import getCustomersRoutes from "./routes/getCustomersRoutes.js";
 import getQuotationRoutes from "./routes/getQuotationRoutes.js";
+import getQuotationItemsRoutes from "./routes/getQuotationItemsRoutes.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -20,8 +21,9 @@ app.get("/", (req, res) => {
 // Rutas para la API
 app.use("/api/customers", customersRoutes);
 app.use("/api/quotation", quotationRoutes);
-app.use("/api", getQuotationRoutes);
-app.use("/api", getCustomersRoutes);
+app.use("/api/quotationItems", getQuotationItemsRoutes);
+app.use("/api/quotation", getQuotationRoutes);
+app.use("/api/customers", getCustomersRoutes);
 
 const PORT = process.env.PORT || 5000;
 const URL = process.env.URL || "http://localhost:";
