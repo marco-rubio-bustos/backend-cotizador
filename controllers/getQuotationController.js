@@ -3,12 +3,12 @@ import pool from "../config/db.js";
 // Obtener cotizaciones con paginación
 export const getQuotation = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1; // Página actual, por defecto 1
+    const limit = parseInt(req.query.limit) || 100; // Número de elementos por página, por defecto 10
     const offset = (page - 1) * limit;
 
     const [quotation] = await pool.query(
-      "SELECT * FROM quotation LIMIT ? OFFSET ?",
+      "SELECT * FROM quotation ORDER BY id DESC LIMIT ? OFFSET ?",
       [limit, offset]
     );
 

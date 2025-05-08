@@ -4,6 +4,7 @@ import pool from "../config/db.js";
 export const quotationController = async (req, res) => {
   try {
     const {
+      createdCustomer,
       name,
       address,
       rut,
@@ -29,6 +30,7 @@ export const quotationController = async (req, res) => {
 
     // Construimos el objeto con toda la información
     const data = {
+      createdCustomer: createdCustomer || null,
       name: name || null,
       address: address || null,
       rut: rut || null,
@@ -43,8 +45,9 @@ export const quotationController = async (req, res) => {
 
     // Consulta SQL para guardar la cotización y los datos del cliente
     const [quotationResult] = await pool.query(
-      "INSERT INTO quotation (name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO quotation (createdCustomer, name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
+        data.createdCustomer,
         data.name,
         data.address,
         data.rut,
@@ -113,3 +116,9 @@ export const quotationController = async (req, res) => {
 // name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral
 
 // ALTER TABLE clientes DROP COLUMN telefono;
+
+// UPDATE quotation
+// SET createdCustomer = 6
+// WHERE name = 'asdssss';
+
+// TRUNCATE TABLE nombre_de_tu_tabla;

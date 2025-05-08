@@ -9,13 +9,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const PORT = process.env.PORT;
+
 const app = express();
 
 app.use(cors());
 app.use(express.json()); // Permite recibir JSON en las peticiones
 // Ruta de prueba para verificar que el servidor funciona
 app.get("/", (req, res) => {
-  res.send("Servidor funcionando correctamente 🚀");
+  res.send(`Servidor funcionando correctamente`);
 });
 
 // Rutas para la API
@@ -25,8 +27,6 @@ app.use("/api/quotationItems", getQuotationItemsRoutes);
 app.use("/api/quotation", getQuotationRoutes);
 app.use("/api/customers", getCustomersRoutes);
 
-const PORT = process.env.PORT || 5000;
-const URL = process.env.URL || "http://localhost:";
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo`);
 });
