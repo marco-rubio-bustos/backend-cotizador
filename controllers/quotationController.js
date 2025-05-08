@@ -4,59 +4,82 @@ import pool from "../config/db.js";
 export const quotationController = async (req, res) => {
   try {
     const {
+      createdCustomer,
       name,
       address,
       rut,
       attention,
       phone,
       email,
-      notesGeneral,
-      description,
-      qty,
-      priceUnit,
+      subTotal,
+      iva,
       total,
-      notes,
+      notesGeneral,
+      quotations,
     } = req.body;
 
-    if (!description || qty == null || priceUnit == null || total == null) {
-      return res.status(400).json({ error: "Hay campos obligatorios" });
+    if (!name || !address || !rut || !attention || !phone || !email) {
+      return res
+        .status(400)
+        .json({ error: "Hay campos obligatorios faltantes" });
     }
 
+    // Extraemos los campos dentro de getCustomerData
+    // const { name, address, rut, attention, phone, email, notesGeneral } =
+    //   getCustomerData;
+
+    // Construimos el objeto con toda la información
     const data = {
+      createdCustomer: createdCustomer || null,
       name: name || null,
       address: address || null,
       rut: rut || null,
       attention: attention || null,
       phone: phone || null,
       email: email || null,
+      subTotal: subTotal || null,
+      iva: iva || null,
+      total: total || null,
       notesGeneral: notesGeneral || null,
-      description: description,
-      qty: qty,
-      priceUnit: priceUnit,
-      total: total,
-      notes: notes || null,
     };
 
-    const [result] = await pool.query(
-      "INSERT INTO quotation (name, address, rut, attention, phone, email, notesGeneral, description, qty, priceUnit, total, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    // Consulta SQL para guardar la cotización y los datos del cliente
+    const [quotationResult] = await pool.query(
+      "INSERT INTO quotation (createdCustomer, name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
+        data.createdCustomer,
         data.name,
         data.address,
         data.rut,
         data.attention,
         data.phone,
         data.email,
-        data.notesGeneral,
-        data.description,
-        data.qty,
-        data.priceUnit,
+        data.subTotal,
+        data.iva,
         data.total,
-        data.notes,
+        data.notesGeneral,
       ]
     );
 
+    const quotationId = quotationResult.insertId;
+
+    // Insertar en la tabla quotationPrice
+    for (const item of quotations) {
+      await pool.query(
+        "INSERT INTO quotationprice (idPrice, description, qty, priceUnit, total, notes) VALUES (?, ?, ?, ?, ?, ?)",
+        [
+          quotationId,
+          item.description,
+          item.qty,
+          item.priceUnit,
+          item.total,
+          item.notes,
+        ]
+      );
+    }
+
     res.status(201).json({
-      id: result.insertId,
+      id: quotationResult.insertId,
       ...data,
     });
   } catch (error) {
@@ -85,3 +108,17 @@ export const quotationController = async (req, res) => {
 // ALTER TABLE quotation
 // ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY,
 // ADD COLUMN description VARCHAR(255),
+
+// ALTER TABLE nombre_de_la_tabla CHANGE nombre_antiguo nombre_nuevo varchar(225);
+
+// ALTER TABLE quotation MODIFY COLUMN subTotal varchar(225) AFTER email;
+
+// name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral
+
+// ALTER TABLE clientes DROP COLUMN telefono;
+
+// UPDATE quotation
+// SET createdCustomer = 6
+// WHERE name = 'asdssss';
+
+// TRUNCATE TABLE nombre_de_tu_tabla;

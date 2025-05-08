@@ -3,14 +3,21 @@ import pool from "../config/db.js";
 // Obtener clientes con paginación
 export const getCustomers = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
     const offset = (page - 1) * limit;
 
-    const [customers] = await pool.query(
-      "SELECT * FROM customers LIMIT ? OFFSET ?",
-      [limit, offset]
-    );
+    //const [customers] = await pool.query("SELECT * FROM customers");
+    let customers = [];
+    // Dependerá del front para mostrar todos o algunos
+    if (req.query.all === "true") {
+      [customers] = await pool.query("SELECT * FROM customers");
+    } else {
+      [customers] = await pool.query(
+        "SELECT * FROM customers LIMIT ? OFFSET ?",
+        [limit, offset]
+      );
+    }
 
     const [total] = await pool.query("SELECT COUNT(*) AS count FROM customers");
     const totalItems = total[0].count;
