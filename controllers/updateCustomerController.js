@@ -11,15 +11,7 @@ export const updateCustomerController = async (req, res) => {
     const { name, address, rut, attention, phone, email, notesGeneral } =
       req.body;
 
-    if (
-      !name ||
-      !address ||
-      !rut ||
-      !attention ||
-      !phone ||
-      !email ||
-      notesGeneral == null
-    ) {
+    if (!name || !address || !rut || !attention || !phone || !email) {
       return res.status(400).json({ error: "Hay campos obligatorios" });
     }
 
