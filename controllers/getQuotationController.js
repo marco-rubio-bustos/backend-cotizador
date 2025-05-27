@@ -20,7 +20,7 @@ export const getQuotation = async (req, res) => {
     const [lastQuotation] = await pool.query(
       "SELECT id FROM quotation ORDER BY id DESC LIMIT 1"
     );
-    const lastId = lastQuotation.length > 0 ? lastQuotation[0].id : null;
+    const lastId = lastQuotation.length > 0 ? lastQuotation[0].id : 0;
 
     //  **Asegurar que se devuelve un objeto con la clave `quotation`**
     res.json({

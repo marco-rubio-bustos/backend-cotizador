@@ -3,57 +3,27 @@ import pool from "../config/db.js";
 // Guardar una cotización en la base de datos
 export const quotationController = async (req, res) => {
   try {
-    const {
-      createdCustomer,
-      name,
-      address,
-      rut,
-      attention,
-      phone,
-      email,
-      subTotal,
-      iva,
-      total,
-      notesGeneral,
-      quotations,
-    } = req.body;
+    const { createdCustomer, subTotal, iva, total, quotations } = req.body;
 
-    if (!name || !address || !rut || !attention || !phone || !email) {
+    if (!createdCustomer || !subTotal || !iva || !total) {
       return res
         .status(400)
         .json({ error: "Hay campos obligatorios faltantes" });
     }
 
-    // Extraemos los campos dentro de getCustomerData
-    // const { name, address, rut, attention, phone, email, notesGeneral } =
-    //   getCustomerData;
-
     // Construimos el objeto con toda la información
     const data = {
       createdCustomer: createdCustomer || null,
-      name: name || null,
-      address: address || null,
-      rut: rut || null,
-      attention: attention || null,
-      phone: phone || null,
-      email: email || null,
       subTotal: subTotal || null,
       iva: iva || null,
       total: total || null,
-      notesGeneral: notesGeneral || null,
     };
 
     // Consulta SQL para guardar la cotización y los datos del cliente
     const [quotationResult] = await pool.query(
-      "INSERT INTO quotation (createdCustomer, name, address, rut, attention, phone, email, subTotal, iva, total, notesGeneral) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO quotation (createdCustomer,  subTotal, iva, total) VALUES (?, ?, ?, ?)",
       [
         data.createdCustomer,
-        data.name,
-        data.address,
-        data.rut,
-        data.attention,
-        data.phone,
-        data.email,
         data.subTotal,
         data.iva,
         data.total,
