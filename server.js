@@ -29,11 +29,11 @@ app.get("/", (req, res) => {
 
 // Rutas para la API
 app.use("/api/customers/update", updateCustomersRoutes);
-app.use("/api/customers", customersRoutes);
+app.use("/api/customer", customersRoutes);
 app.use("/api/quotation", quotationRoutes);
-app.use("/api/quotationItems", getQuotationItemsRoutes);
-app.use("/api/quotation", getQuotationRoutes);
-app.use("/api/customers", getCustomersRoutes);
+app.use("/api/quotationItems/get", getQuotationItemsRoutes);
+app.use("/api/quotation/get", getQuotationRoutes);
+app.use("/api/customers/get", getCustomersRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo`);
