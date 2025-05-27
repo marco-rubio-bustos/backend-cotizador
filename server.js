@@ -14,7 +14,13 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["https://etiquetando.cl", "http://localhost:5173"], // agrega aquí tus orígenes válidos
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
+
 app.use(express.json()); // Permite recibir JSON en las peticiones
 // Ruta de prueba para verificar que el servidor funciona
 app.get("/", (req, res) => {
