@@ -15,7 +15,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-  origin: ["https://etiquetando.cl", "http://localhost:5173"], // agrega aquí tus orígenes válidos
+  origin: ["https://etiquetando.cl", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
