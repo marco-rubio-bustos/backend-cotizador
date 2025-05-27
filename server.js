@@ -33,7 +33,7 @@ app.use("/api/customers", customersRoutes);
 app.use("/api/quotation", quotationRoutes);
 app.use("/api/quotationItems", getQuotationItemsRoutes);
 app.use("/api/quotation", getQuotationRoutes);
-app.use("/api/customers/get", getCustomersRoutes);
+app.use("/api/customers", getCustomersRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo`);
