@@ -3,6 +3,11 @@ import { updateCustomerController } from "../controllers/updateCustomerControlle
 
 const router = express.Router();
 
-router.put("/:id", updateCustomerController);
+// router.put("/:id", updateCustomerController);
+
+router.put("/:id", (req, res) => {
+  console.log("Solicitud recibida para actualizar cliente:", req.params.id);
+  updateCustomerController(req, res);
+});
 
 export default router;
